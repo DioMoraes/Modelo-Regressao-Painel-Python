@@ -1,0 +1,64 @@
+# Data Wrangling Packages
+import pandas as pd, numpy as np
+from itertools import product
+# Modeling Packages
+import statsmodels.api as sm
+from linearmodels.panel import PanelOLS
+#plot Packpages
+import matplotlib.pyplot as plt
+
+#data
+data = 'C:/Users/Diogo/Documents/CURSO DSA PYTHON/CAP 2 - VISAO GERAL E CHAT GPT/teste dados/dados.xlsx'
+
+# Lê o arquivo Excel
+df = pd.read_excel(data)
+# Exibe as primeiras linhas do DataFrame para verificar se os dados foram importados corretamente
+
+
+# Configura o DataFrame para dados em painel
+df = df.set_index(['REGIAO', 'ANO'])
+
+#print(df)
+
+# Especifica as variáveis dependente e independentes
+Y = df['VALOR_ENEM']
+X = df[['INV_EDU', 'REND_MED_MEN']]
+
+# Adiciona uma constante ao modelo (equivalente ao intercepto)
+X = sm.add_constant(X)
+
+# Ajusta o modelo de efeitos fixos
+model = PanelOLS(Y, X, entity_effects=True)
+results = model.fit()
+
+# Exibe o resumo do modelo
+print(results.summary)
+
+# Forma a equação da regressão
+params = results.params
+equation = f"VALOR_ENEM = {params['const']} + {params['INV_EDU']}*INV_EDU + {params['REND_MED_MEN']}*REND_MED_MEN"
+
+# Exibe a equação da regressão
+print("Equação da Regressão:")
+print(equation)
+#Calcula os valores previstos manualmente
+predicted_values = np.dot(X, params)
+
+# Plotagem do modelo com dispersão dos dados
+plt.figure(figsize=(10, 6))
+
+# Dispersão dos dados observados
+plt.scatter(predicted_values, Y, color='blue', label='Observado')
+
+# Linha de regressão
+plt.plot(predicted_values, predicted_values, color='red', label='Regressão')
+
+plt.title('Modelo de Regressão com Dispersão')
+plt.xlabel('Valores Previstos')
+plt.ylabel('Valores Observados')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+
+# Exibir o gráfico
+plt.show()
