@@ -1,13 +1,10 @@
-# Data Wrangling Packages
+
 import pandas as pd, numpy as np
 from itertools import product
-# Modeling Packages
 import statsmodels.api as sm
 from linearmodels.panel import PanelOLS
-#plot Packpages
 import matplotlib.pyplot as plt
 
-#data
 data = 'C:/Users/Diogo/Documents/CURSO DSA PYTHON/CAP 2 - VISAO GERAL E CHAT GPT/teste dados/dados.xlsx'
 
 # Lê o arquivo Excel
@@ -18,7 +15,7 @@ df = pd.read_excel(data)
 # Configura o DataFrame para dados em painel
 df = df.set_index(['REGIAO', 'ANO'])
 
-#print(df)
+
 
 # Especifica as variáveis dependente e independentes
 Y = df['VALOR_ENEM']
